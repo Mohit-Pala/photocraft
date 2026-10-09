@@ -191,6 +191,30 @@ jobs:
       - name: Check wasm-safe crates
         run: cargo xtask wasm
 
+  ios:
+    # PhotoCraft for iPad (apps/photocraft-ios, docs/ios.md): the app and its Apple Pencil glue
+    # (crates/tablet/src/ios.rs) build only for iOS, so the Linux and Windows jobs never compile
+    # them. Builds for the device and the Apple-silicon simulator; nothing runs (no iPad here).
+    name: iPad build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios, aarch64-apple-ios-sim
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ios
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+          cache-on-failure: true
+      - name: Clippy (iPad)
+        env:
+          IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+        run: cargo clippy -p photocraft-ios -p photocraft-tablet --target aarch64-apple-ios --locked -- -D warnings
+      - name: Build and bundle (simulator)
+        run: packaging/ios/build.sh --simulator
+
   fuzz:
     name: fuzz (${{ matrix.target.crate }}/${{ matrix.target.name }})
     # Placeholder: manual trigger only until a nightly schedule is enabled.

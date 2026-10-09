@@ -354,6 +354,14 @@ How the web shell (`apps/photocraft-web/src/web.rs`) differs from desktop:
 - Headless Chrome on macOS (`--headless=new --enable-unsafe-webgpu`) gets a real WebGPU adapter.
 
 
+## iPad build
+
+`apps/photocraft-ios` is the same app on the iPad (eframe on UIKit, wgpu on Metal) with Apple Pencil
+and touch input. `cargo run -p photocraft-ios` runs its shell in a desktop window;
+`packaging/ios/build.sh --simulator --run` (macOS with Xcode) runs it in the iPad Simulator, and
+`packaging/ios/build.sh --device --release --run` on a real iPad. Setup, signing and a hardware test
+checklist: [ios.md](ios.md).
+
 ## Indexed Color timings
 
 `cargo run --release -p photocraft-engine --example indexed_color_perf -- image.png` measures

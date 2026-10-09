@@ -491,6 +491,9 @@ fn system_font_dirs() -> Vec<std::path::PathBuf> {
         if let Some(h) = &home {
             v.push(h.join("Library/Fonts"));
         }
+    } else if cfg!(target_os = "ios") {
+        // iPadOS: the system's fonts, readable from the app's sandbox (it has no font folders).
+        v.push(PathBuf::from("/System/Library/Fonts"));
     } else if cfg!(target_os = "windows") {
         let windir = std::env::var_os("WINDIR").map_or_else(|| PathBuf::from("C:\\Windows"), PathBuf::from);
         v.push(windir.join("Fonts"));

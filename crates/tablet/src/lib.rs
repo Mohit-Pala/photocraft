@@ -11,6 +11,11 @@
 //!   raw events on the root window and maps the tablet device's valuators ("Abs Pressure",
 //!   "Abs Tilt X/Y", "Abs Rotary Z") to samples. Raw events reach every client that asks, also
 //!   while winit holds the pointer grab of a drag. No `unsafe`.
+//! - **iPad** ([`ios::Pencil`]): winit forwards the Apple Pencil's force as touch force but drops
+//!   its azimuth, roll, hover, double-tap and squeeze. A touch-observing gesture recognizer, a
+//!   hover recognizer and a `UIPencilInteraction` on winit's `UIView` read them (UIKit
+//!   subclassing needs Objective-C interop, so `ios.rs` also allows `unsafe`), mapped by the
+//!   pure [`uikit`] module.
 //! - **Wayland**: not covered. The `zwp_tablet_v2` protocol has to be bound on winit's own
 //!   `wl_display` connection (the tablet events name winit's `wl_surface`), which needs
 //!   `unsafe` foreign-display interop, and binding it makes compositors stop emulating the
@@ -18,8 +23,8 @@
 //!   it, compositors give the window no pen input at all, so the desktop app opens its window
 //!   through Xwayland when a pen is attached, and the X11 reader applies.
 //!
-//! The platform glue only reads raw values and hands them to the pure mapping in [`appkit`] and
-//! [`xi`], which normalise, clamp and track pen state and are tested on every platform.
+//! The platform glue only reads raw values and hands them to the pure mapping in [`appkit`],
+//! [`uikit`] and [`xi`], which normalise, clamp and track pen state and are tested on every platform.
 //!
 //! A sample is reported through a callback: `Some(sample)` while a pen is in use (hovering or
 //! touching), `None` when the pointer is a mouse again.
@@ -27,8 +32,11 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
 pub mod appkit;
+pub mod uikit;
 pub mod xi;
 
+#[cfg(target_os = "ios")]
+pub mod ios;
 #[cfg(target_os = "macos")]
 pub mod macos;
 #[cfg(target_os = "linux")]
@@ -82,7 +90,7 @@ pub enum Update {
 /// Why tablet input could not be started.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Error {
-    /// Must be called on the main thread (AppKit).
+    /// Must be called on the main thread (AppKit, UIKit).
     NotMainThread,
     /// The platform or display server doesn't offer what this needs.
     Unsupported(String),
