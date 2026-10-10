@@ -3,11 +3,12 @@ name = "photocraft-tablet"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Pen tablet pressure, tilt, rotation and eraser end on macOS (AppKit) and Linux X11 (XInput2)"
+description = "Pen tablet pressure, tilt, rotation and eraser end on macOS (AppKit), Linux X11 (XInput2) and iPad (Apple Pencil, UIKit)"
 
 # The one isolated `unsafe` helper crate (craftrules never-crash, AGENTS.md): the AppKit event
-# monitor needs Objective-C interop. Only `src/macos.rs` allows `unsafe`; everything else is
-# denied, and every other crate keeps the workspace's `unsafe_code = "forbid"`.
+# monitor and the UIKit Pencil glue need Objective-C interop. Only `src/macos.rs` and
+# `src/ios.rs` allow `unsafe`; everything else is denied, and every other crate keeps the
+# workspace's `unsafe_code = "forbid"`.
 [lints.rust]
 unsafe_code = "deny"
 
@@ -22,6 +23,26 @@ objc2 = "=0.6.4"
 block2 = "=0.6.2"
 objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSGeometry"] }
 objc2-app-kit = { version = "=0.3.2", default-features = false, features = ["std", "block2", "NSEvent"] }
+
+# Apple Pencil on iPad (src/ios.rs). Already in Cargo.lock (egui-winit's iOS safe-area code and
+# wgpu pull them in); pinned exactly: review the diff before bumping.
+[target.'cfg(target_os = "ios")'.dependencies]
+objc2 = "=0.6.4"
+objc2-foundation = { version = "=0.3.2", default-features = false, features = ["std", "NSEnumerator", "NSSet"] }
+objc2-ui-kit = { version = "=0.3.2", default-features = false, features = [
+    "std",
+    "objc2-core-foundation",
+    "UIEvent",
+    "UIGestureRecognizer",
+    "UIGestureRecognizerSubclass",
+    "UIHoverGestureRecognizer",
+    "UIInteraction",
+    "UIPencilInteraction",
+    "UIResponder",
+    "UITouch",
+    "UIView",
+] }
+raw-window-handle = "0.6"
 
 # Pure-Rust X11 client (no unsafe in the RustConnection path we use).
 [target.'cfg(target_os = "linux")'.dependencies]

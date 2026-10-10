@@ -15,6 +15,11 @@
 //!   the eraser end into the [`StylusFeed`] before winit handles each event.
 //! - **Linux X11**: the desktop app reads XInput2 raw valuator events on its own X connection
 //!   (`photocraft-tablet`, x11rb) and writes them into the [`StylusFeed`].
+//! - **iPad**: winit forwards the Apple Pencil's force as touch force (read here like Windows'),
+//!   and the iPad app (`apps/photocraft-ios`) adds UIKit gesture recognizers (the
+//!   `photocraft-tablet` crate) that write pressure, tilt from altitude and azimuth, and barrel
+//!   roll into the [`StylusFeed`]. The Pencil has no eraser end; its double-tap and squeeze switch
+//!   tools in the iPad app.
 //! - **Linux Wayland**: compositors give a pen only to clients that bind `zwp_tablet_v2`, which
 //!   winit doesn't (it would have to share winit's connection), so with a pen attached the
 //!   desktop app opens its window through Xwayland, which reports tablet valuators to the X11

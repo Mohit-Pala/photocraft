@@ -4240,6 +4240,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "photocraft-ios"
+version = "0.5.0"
+dependencies = [
+ "eframe",
+ "egui",
+ "log",
+ "photocraft-codecs",
+ "photocraft-doc",
+ "photocraft-engine",
+ "photocraft-format",
+ "photocraft-io",
+ "photocraft-tablet",
+ "photocraft-ui-egui",
+]
+
+[[package]]
 name = "photocraft-ops"
 version = "0.5.0"
 dependencies = [
@@ -4311,6 +4327,8 @@ dependencies = [
  "objc2-app-kit 0.3.2",
  "objc2-core-graphics",
  "objc2-foundation 0.3.2",
+ "objc2-ui-kit 0.3.2",
+ "raw-window-handle",
  "x11rb",
 ]
 

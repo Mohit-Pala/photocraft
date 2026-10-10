@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Template: packaging/ios/build.sh substitutes @VERSION@ (full, e.g. 0.5.0-rc.1),
+     @SHORT_VERSION@ (numeric X.Y.Z), @BUILD_SHA@, @BUNDLE_ID@, @PLATFORM@ (iPhoneOS or
+     iPhoneSimulator) and @MIN_OS@ (IPHONEOS_DEPLOYMENT_TARGET). -->
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleDisplayName</key>
+  <string>PhotoCraft</string>
+  <key>CFBundleName</key>
+  <string>PhotoCraft</string>
+  <key>CFBundleExecutable</key>
+  <string>PhotoCraft</string>
+  <key>CFBundleIdentifier</key>
+  <string>@BUNDLE_ID@</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>@SHORT_VERSION@</string>
+  <key>CFBundleVersion</key>
+  <string>@SHORT_VERSION@</string>
+  <key>PhotoCraftVersion</key>
+  <string>@VERSION@</string>
+  <key>PhotoCraftBuildCommit</key>
+  <string>@BUILD_SHA@</string>
+  <key>CFBundleSupportedPlatforms</key>
+  <array>
+    <string>@PLATFORM@</string>
+  </array>
+  <key>MinimumOSVersion</key>
+  <string>@MIN_OS@</string>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.graphics-design</string>
+  <key>NSHumanReadableCopyright</key>
+  <string>Copyright © the PhotoCraft authors. MIT OR Apache-2.0.</string>
+  <key>ITSAppUsesNonExemptEncryption</key>
+  <false/>
+
+  <!-- iPad only (UIDeviceFamily 2), on a GPU wgpu can drive (Metal). -->
+  <key>UIDeviceFamily</key>
+  <array>
+    <integer>2</integer>
+  </array>
+  <key>UIRequiredDeviceCapabilities</key>
+  <array>
+    <string>arm64</string>
+    <string>metal</string>
+  </array>
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+  </array>
+  <!-- One full-screen window: the app draws its own panels (no Split View / Slide Over yet). -->
+  <key>UIRequiresFullScreen</key>
+  <true/>
+  <!-- Without a launch screen iOS runs the app letterboxed at a legacy size. -->
+  <key>UILaunchScreen</key>
+  <dict/>
+  <key>UIStatusBarHidden</key>
+  <true/>
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+  <false/>
+
+  <!-- The Documents folder is the Files app's "On My iPad › PhotoCraft" (and Finder's file
+       sharing over USB): File › Open and Save As browse it (apps/photocraft-ios/src/files.rs). -->
+  <key>UIFileSharingEnabled</key>
+  <true/>
+  <key>LSSupportsOpeningDocumentsInPlace</key>
+  <true/>
+
+  <!-- Bundle-root icons written by build.sh from assets/app-icon/photocraft-1024.png. -->
+  <key>CFBundleIcons~ipad</key>
+  <dict>
+    <key>CFBundlePrimaryIcon</key>
+    <dict>
+      <key>CFBundleIconFiles</key>
+      <array>
+        <string>AppIcon76x76</string>
+        <string>AppIcon83.5x83.5</string>
+      </array>
+    </dict>
+  </dict>
+</dict>
+</plist>

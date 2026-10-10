@@ -1,0 +1,35 @@
+[package]
+name = "photocraft-ios"
+description = "PhotoCraft for iPad: the app with Apple Pencil, touch and the iPad's files (eframe on UIKit + Metal)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[features]
+# Open HEIC/HEIF photos (the optional photocraft-heif crate), as the other apps.
+heif = ["photocraft-codecs/heif"]
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "photocraft-ios"
+path = "src/main.rs"
+
+[dependencies]
+photocraft-engine = { workspace = true }
+photocraft-io = { workspace = true }
+photocraft-codecs = { workspace = true }
+photocraft-doc = { workspace = true }
+photocraft-format = { workspace = true }
+photocraft-ui-egui = { workspace = true }
+# Apple Pencil (src/ios.rs, the isolated unsafe helper) and its platform-independent mapping.
+photocraft-tablet = { workspace = true }
+eframe = { workspace = true, features = ["default_fonts", "wgpu", "persistence"] }
+egui = { workspace = true }
+log = { workspace = true }
+
+# Trying the shell on a Linux desktop: winit needs a display server backend there.
+[target.'cfg(target_os = "linux")'.dependencies]
+eframe = { workspace = true, features = ["wayland", "x11"] }
